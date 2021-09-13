@@ -1,0 +1,135 @@
+<!--
+  Données mises en dur pour l'exemple
+
+  <h1>Component todo</h1>
+
+<ul>
+  <li> Projet 1 </li>
+  <li> Projet 2 </li>
+  <li> Projet 3 </li>
+  <li> Projet 4 </li>
+</ul>
+-->
+
+
+
+
+<!--Données mises en liste avec bootstrap list en données dynamiques
+
+<h1>Liste des tâches à réaliser</h1>
+
+<ul class="list-group">
+  <li class="list-group-item">{{todoOne}}</li>
+  <li class="list-group-item">{{todoTwo}}</li>
+  <li class="list-group-item">{{todoThree}}</li>
+  <li class="list-group-item">{{todoFour}}</li>
+</ul>
+-->
+
+
+
+
+
+<!--Données mises en liste avec bootstrap list en données de tableau dynamiques : (todos)
+  *ngFor permet de créer une itératioin sur "todos"
+  *ngFor="let todo of todos"
+  todos : c'est le tableau
+  todo : c'est une variable qui va désigner l'élément que l'on trouve dans le tableau, le nom est totalement
+  arbitraire, on peut mettre ce que l'on veut
+
+  chaque fois que le todos [] change dans le todo.component.ts,  il sera adapté dans le todo.component.html
+
+  recevoir des données depuis la logique( component.ts ) de notre component s'appelle **l'interpolation**-->
+
+
+  <!--***********************************************************************
+    <h1>Liste des tâches à réaliser</h1>
+
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let todo of todos">{{todo}}</li>
+
+    </ul>
+    ***************************************************************************-->
+
+
+
+
+
+
+    <!-- Ici on ne veut plus afficher un tableau, mais un paramètre dans les paramètres de l'objet -->
+
+    <!--**ngStyle** n'est pas une directive structurelle, mais plutôt une directive d'attribut
+    cette directive d'attribut va nous permettre d'activer un ou plusieurs styles css à un élément HTML
+    les directives d'attribut doivent être mise dans des crochets : [ngStyle]="" (on lui donne un objet)
+  exemple: attribuer des styles à notre titre H1-->
+
+
+    <h1 [ngStyle]="{color: 'blue'}"> Liste des tâches à réaliser </h1>
+    <!--
+    <h1 [ngClass]="['classe1','classe2']">Liste des tâches à réaliser.</h1>
+    <h1 [ngClass]="'classe1 classe2'"> Liste des tâches à réaliser </h1>
+    -->
+
+
+    <!-- On va définir la date en mettant l'opérateur d'interpolation {{ }}
+    On y ajoute le pipe date pour structurer la date et avoir un meilleur rendu-->
+    <p>Nous sommes le {{today | date:'short' | uppercase}}</p>
+
+
+    <ul class="list-group">
+      <!--ngFor va permettre de récupérer l'index i d'un élément du tableau et donc de déclencher
+        des événements en fonction de l'index sur lequel on se trouve dans le tableau-->
+        <li class="list-group-item" *ngFor="let todo of todos, let i = index">
+
+          <!--
+          si on essaye de mettre l'interpolation de todo, ca ne se passe pas correctement et il va afficher un objet dans le .html : "[object Object]"
+          {{todo}}
+          si on veut vraiment afficher le contenu de notre objet pour eventuellement débloquer le code, on utilisera le pipe json : {{todo | json}}
+          {{todo | json}}
+          -->
+
+
+          <div [ngClass]="{encours:todo.todoStatus,terminee:!todo.todoStatus}">
+            <!-- On peut faire de l'interpolation entre une balise ouvrante et une balise fermante (<li></li>,
+              Mais on ne peut pas faire d'interpolation dans la balise <img>) : <img src={{ todo.image }}
+              On devra utiliser la propiété binding CAD on met le src entre crochets et il interprétera le "todo.image" comme une valeur typescript et non
+              comme une chaine de caractères -->
+
+              <a [href]="todo.image">
+                <img [src]="todo.image">
+              </a>
+
+              {{todo.todoName}}
+
+    <!--On ajoute ici un bouton en cours et un bouton terminé
+    et on veut que la visibilité du boutton dépende du status de la tâche:
+    si c'est true, on va désactiver le boutton
+    si c'est false, on va l'activer
+    On devra aussi utiliser la ***property binding*** "disabled" que l'on mettra aussi entre crochets
+    ainsi lorsque la valeur sera "true" le bouton sera désactivé (disabled)-->
+
+    <button class="btn btn-primary mr-1" [disabled]="todo.todoStatus"
+    (click)="onChangeStatus(i)"> En cours </button>
+    <!-- Si on veut le désactivé lorsque le status est "false", on met la négation '!'  -->
+
+    <button class="btn btn-success mr-1" [disabled]="!todo.todoStatus"
+    (click)="onChangeStatus(i)"> Terminé </button>
+
+
+<!--ACTION DE MODIFICATION-->
+<!--Si !todo.isModif est false on affiche le bouton modifier, par contre si todo.isModif est true, on affiche le bouton Modification terminée (*ngIf="todo.isModif")-->
+<button class="btn btn-danger mr-1" *ngIf="!todo.isModif"
+(click)="onChangeIsModif(i)"> Modifier </button>
+
+<button class="btn btn-success mr-1" *ngIf="todo.isModif"
+(click)="onChangeIsModif(i)"> Modification Terminée </button>
+
+<input *ngIf="todo.isModif" class="form-control" [(ngModel)]="todo.todoName">
+
+    </div>
+  </li>
+
+</ul>
+
+
+
