@@ -1,0 +1,13 @@
+<!-- Quand le résultat est false, avec le ngIf="todo", ca ne va pas s'afficher
+<p *ngIf="todo">{{ todo | json }}</p> -->
+<!-- dans le cas ou "todo" n'existe pas, ou dans le cas ou error existe on affichera "Id incorect" -->
+<p *ngIf="!todo">{{ error }}</p>
+<!-- On met un / devant routerLink pour acceder à la racine + /todos, sinon il va rajouter todos après single-todo/todos et ca ne fonctionnera pas -->
+<div *ngIf="todo" class="card" style="width: 18rem;">
+  <img [src]="todo.image" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-text">{{todo.todoName}}</h5>
+    <p class="card-text">{{todo.description}}</p>
+  </div>
+</div>
+<a type="button" class="btn btn-primary" routerLink="/todos" >Retour</a>

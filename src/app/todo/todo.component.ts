@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { TodoService } from '../services/todo.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -9,70 +11,42 @@ import { Component } from '@angular/core';
 
 
 
-export class TodoComponent{
-  //On met ici les données des projets pour pouvoir les utiliser dans le todo.component.html
-  //et les gérer de façon dynamique.
-  todoOne: string = "Projet 1";
-  todoTwo: string = "Projet 2";
-  todoThree: string = "Projet 3";
-  todoFour: string = "Projet 4";
+export class TodoComponent implements OnInit{
 
-  //On crée une variable today avec une date pour tester les pipes
-  today = new Date();
+    today: any;
+    todos: any;
 
 
 
+    constructor(private todoService: TodoService,
+                private router: Router) {
+      //private pour qu'il soit accessible uniquement à l'intérieur de ce component,
+      //et le nom de la variable "todoService" qui sera de type "TodoService"
+    }
+
+    ngOnInit(){
+      this.today = this.todoService.today;
+      this.todoService.todos
+        .then((todosRecup: any) => {
+          this.todos = todosRecup;
+        })
+        .catch((error: any) => {
+          console.log("erreur"+error);
+        });
+    }
+
+    onChangeStatus(i: number){
+      this.todoService.onChangeStatus(i); //on appelle la méthode onChangeStatus dans le service et on lui donne le paramètre (i) que l'on a récupéré.
+    }
+
+    onChangeIsModif(i: number){
+      this.todoService.onChangeIsModif(i);
+    }
+
+    onView(id: number){
+      this.router.navigate(["single-todo",id])  //navigate prend en paramètre un tableau, dans le tableau on met la route vers laquelle on veut renvoyer l'utilisateur
+    }
 
 
-  // //On crée une variable pour demander si l'utilisateur veut mofifier le nom
-  // isModif = false;
 
-//*****************************************************************************
-  //On peut regrouper le tout dans un tableau: ( string[] : tableau de chaines de caractères)
-
-// todos: string[] = ["Projet t1","Projet t2","Projet t3","Projet t4","Projet t5","Projet t6","Projet t7","Projet t8"];
-//*****************************************************************************
-
-
-  //On peut representer une tâche par une chaine de caractère,
-  //On peut représenter une tâche par un objet :
-
-  todos = [
-    {
-      todoName: "Projet 1", //une tâche peut avoir un nom
-      todoStatus: true,     //une tâche peut avoir un status, ex: si la tâche est déjà réalisée ou non
-      image: "http://placehold.it/150", //une tâche peut avoir une image: ici on met une image aléatoire
-      isModif: false //une tâche pour définir que par défaut l'utilisateur ne veut pas afficher l'input et changer le nom du Projet
-    },
-    {
-      todoName: "Projet 2",
-      todoStatus: false,
-      image: "http://placehold.it/151",
-      isModif: true
-    },
-    {
-      todoName: "Projet 3",
-      todoStatus: true,
-      image: "http://placehold.it/151",
-      isModif: false
-    },
-    {
-      todoName: "Projet 4",
-      todoStatus: false,
-      image: "http://placehold.it/151",
-      isModif: false
-    },
-  ]
-
-
-//la fonction prend un "i" qui est un number
-  onChangeStatus(i: number){
-    this.todos[i].todoStatus = !this.todos[i].todoStatus;
-    //ca va prendre l'élément du tableau qui est à la position "i" (  this.todos[i]  ),
-    //et on va changer son status en y mettant le contraire de sa valeur. (s'il est true, la valeur changera donc en false, et inversement)
-  }
-
-  onChangeIsModif(i: number){
-    this.todos[i].isModif = !this.todos[i].isModif;
-  }
 }
