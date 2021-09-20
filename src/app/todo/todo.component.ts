@@ -1,6 +1,7 @@
 import { TodoService } from '../services/todo.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -11,12 +12,12 @@ import { Router } from '@angular/router';
 
 
 
-export class TodoComponent implements OnInit{
+export class TodoComponent implements OnInit, OnDestroy{
 
     today: any;
     todos: any;
 
-
+    declare todosSub: Subscription;
 
     constructor(private todoService: TodoService,
                 private router: Router) {
@@ -24,15 +25,31 @@ export class TodoComponent implements OnInit{
       //et le nom de la variable "todoService" qui sera de type "TodoService"
     }
 
+//*****UTILISATION EN PROMISE *****/
+    // ngOnInit(){
+    //   this.today = this.todoService.today;
+    //   this.todoService.todos
+    //     .then((todosRecup: any) => {
+    //       this.todos = todosRecup;
+    //     })
+    //     .catch((error: any) => {
+    //       console.log("erreur"+error);
+    //     });
+    // }
+//*****UTLISATION EN OBSERVABLE*****
+
     ngOnInit(){
-      this.today = this.todoService.today;
-      this.todoService.todos
-        .then((todosRecup: any) => {
-          this.todos = todosRecup;
-        })
-        .catch((error: any) => {
-          console.log("erreur"+error);
-        });
+      this.todosSub = this.todoService.todosSubject.subscribe(		    // on s'abonne à l'observable
+      (value: any[]) => {						                                  // cas ou ca nous retourne une information (ici un tableau de données)
+         this.todos = value;						                              // on met la valeur reçu à l'intérieur de todos
+    },
+      (error) => {							// cas d'erreur : on affiche error dans la console
+         console.log("erreur :"+error);
+    },
+      () => {								// si tout se passe correctement, on affiche "complété" dans la console
+         console.log("Observable complété");
+      })
+      this.todoService.emitTodos(); //une fois que l'on a fait le premier abonnement,  on emet les données.
     }
 
     onChangeStatus(i: number){
@@ -47,6 +64,9 @@ export class TodoComponent implements OnInit{
       this.router.navigate(["single-todo",id])  //navigate prend en paramètre un tableau, dans le tableau on met la route vers laquelle on veut renvoyer l'utilisateur
     }
 
+    ngOnDestroy(){
+      this.todosSub.unsubscribe();    //On fait le désabonnement lorsque l'on va détruire le component.
+    }
 
 
 }
