@@ -13,8 +13,10 @@ import { Subscription } from 'rxjs';
 
 
 export class TodoComponent implements OnInit, OnDestroy{
+    today = new Date();
+    result = Date.toLocaleString();
 
-    today: any;
+    // today: any;
     todos: any;
 
     declare todosSub: Subscription;

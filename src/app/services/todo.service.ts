@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
+import { Todo } from '../models/todo.model';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class TodoService{
 
   //On peut representer une tâche par une chaine de caractère,
   //On peut représenter une tâche par un objet :
-  todos:any;
+  todos!: Todo[]; //on type le todos comme étant l'objet Todo (todo.service.ts)
 
   todoSlice:any;  //On stocke le tableau d'objet (anciennement "todos" dans la variable "todoSlice" qui deviendra alors un tableau d'objets)
 
@@ -182,5 +183,11 @@ export class TodoService{
 
   emitTodos(){
     this.todosSubject.next(this.todos)  //next() permet d'envoyer une valeur à notre observable, quand on fera un abonnement c'est la valeur (this.todos) qui sera émise
+  }
+
+  addTodo(todo: Todo): void{
+    this.todos.push(todo);
+    //this.todosSubject.next(this.todos); //On peut remplacer par la méthode emitTodos() que l'on a créé au dessus.
+    this.emitTodos();
   }
 }
