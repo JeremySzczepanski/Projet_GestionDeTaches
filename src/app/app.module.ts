@@ -15,19 +15,9 @@ import { SingleTodoComponent } from './single-todo/single-todo.component';
 import { AddTodoComponent } from './todo/add-todo/add-todo.component';
 import { UsersComponent } from './users/users.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
+import { AppRoutingModule } from './app-routing.module'; //ligne ajoutée avec le "ng g module app-routing --flat --module=app"
 
-export const ROUTES : Routes =[
-  {path: 'home', component: HomeComponent},
-  {path: 'todos', component: TodoComponent},
-  {path: 'fourohfour', component: ForohfourComponent},
-  {path: 'contact', component: ContactComponent},
-  {path: 'users', component: UsersComponent},
-  {path: 'add-user', component: AddUserComponent},
-  {path: 'add-todo', component: AddTodoComponent},
-  {path: 'single-todo/:id', component: SingleTodoComponent},
-  {path: '', component: TodoComponent},
-  {path: '**', pathMatch:'full', redirectTo: 'fourohfour' }, //lorsqu'une URL n'est pas trouvé dans les routes précédentes on le renvoie vers la route fourohfour
-];
+
 
 @NgModule({
   declarations: [
@@ -48,7 +38,7 @@ export const ROUTES : Routes =[
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(ROUTES),
+    AppRoutingModule,
   ],
   providers: [TodoService],
   bootstrap: [AppComponent]
